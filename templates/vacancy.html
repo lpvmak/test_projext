@@ -20,7 +20,7 @@
         <p class="mt-2">{{ vacancy.specialty.title }} •
           {% for item in vacancy.skills_list|join:' • ' %}{{ item }}{% endfor %}</p>
         <p class="text-muted mb-4">
-          {{ vacancy.company.title }} ({{ vacancy.company.employee_count }} человек), {{ vacancy.company.location }}
+          {{ vacancy.company.title }} ({{ vacancy.company.employee_count }} {{ word }}), {{ vacancy.company.location }}
         </p>
         <div style="line-height: 1.8;">
           {{ vacancy.description|safe }}

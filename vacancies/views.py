@@ -59,7 +59,11 @@ def company_view(request, company_id):
 def vacancy_view(request, job_id):
     vacancy = Vacancy.objects.filter(id=job_id).first()
     vacancy.skills_list = vacancy.skills.split(', ')
-    return render(request, 'vacancy.html', {'vacancy': vacancy})
+    word = people_declension(vacancy.company.employee_count)
+    return render(request, 'vacancy.html', {
+        'vacancy': vacancy,
+        'word': word
+    })
 
 
 def vacancy_declension(num):
@@ -71,3 +75,12 @@ def vacancy_declension(num):
         return 'вакансии'
     else:
         return 'вакансий'
+
+
+def people_declension(num):
+    n = int(str(num)[-1])
+    m = int(str(num // 10)[-1])
+    if 1 < n < 5 and m != 1:
+        return 'человека'
+    else:
+        return 'человек'
