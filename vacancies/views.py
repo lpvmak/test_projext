@@ -19,12 +19,16 @@ def main_view(request):
 
 def jobs_views(request, specialty_code=None):
     if specialty_code:
-        vacancies = Vacancy.objects.filter(specialty=specialty_code).all()
-        specialty = Specialty.objects.filter(code=specialty_code)
+        vacancies = Vacancy.objects.filter(specialty__code=specialty_code).all()
+        for vacancy in vacancies:
+            vacancy.skills_list = vacancy.skills.split(', ')
+        specialty = Specialty.objects.filter(code=specialty_code).first()
         count = vacancies.count()
         word = vacancy_declension(count)
     else:
         vacancies = Vacancy.objects.all()
+        for vacancy in vacancies:
+            vacancy.skills_list = vacancy.skills.split(', ')
         specialty = None
         count = vacancies.count()
         word = vacancy_declension(count)
@@ -37,12 +41,25 @@ def jobs_views(request, specialty_code=None):
     })
 
 
-def companies_view(request, company_id=None):
-    return render(request, 'company.html')
+def company_view(request, company_id):
+    company = Company.objects.filter(id=company_id).first()
+    vacancies = Vacancy.objects.filter(company__id=company_id).all()
+    for vacancy in vacancies:
+        vacancy.skills_list = vacancy.skills.split(', ')
+    count = vacancies.count()
+    word = vacancy_declension(count)
+    return render(request, 'company.html', {
+        'company': company,
+        'vacancies': vacancies,
+        'count': count,
+        'word': word
+    })
 
 
 def vacancy_view(request, job_id):
-    return render(request, 'vacancy.html')
+    vacancy = Vacancy.objects.filter(id=job_id).first()
+    vacancy.skills_list = vacancy.skills.split(', ')
+    return render(request, 'vacancy.html', {'vacancy': vacancy})
 
 
 def vacancy_declension(num):
