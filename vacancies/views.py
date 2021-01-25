@@ -1,4 +1,5 @@
 from django.db.models import Count
+from django.http import HttpResponseNotFound, HttpResponseServerError
 from django.shortcuts import render
 
 from vacancies.models import Specialty, Company, Vacancy
@@ -42,7 +43,7 @@ def jobs_views(request, specialty_code=None):
 
 
 def company_view(request, company_id):
-    company = Company.objects.filter(id=company_id).first()
+    company = Company.objects.get(id=company_id)
     vacancies = Vacancy.objects.filter(company__id=company_id).all()
     for vacancy in vacancies:
         vacancy.skills_list = vacancy.skills.split(', ')
@@ -57,7 +58,7 @@ def company_view(request, company_id):
 
 
 def vacancy_view(request, job_id):
-    vacancy = Vacancy.objects.filter(id=job_id).first()
+    vacancy = Vacancy.objects.get(id=job_id)
     vacancy.skills_list = vacancy.skills.split(', ')
     word = people_declension(vacancy.company.employee_count)
     return render(request, 'vacancy.html', {
@@ -84,3 +85,11 @@ def people_declension(num):
         return 'человека'
     else:
         return 'человек'
+
+
+def custom_handler404(request, exception):
+    return HttpResponseNotFound('<br/><h1>Ошибка 404</h1><h2>Запрашиваемый ресурс не найден</h2>')
+
+
+def custom_handler500(request):
+    return HttpResponseServerError('<br/><h1>Ошибка 500</h1><h2>Запрос некорректен. Отказано в обработке</h2>')
