@@ -22,11 +22,9 @@ def jobs_views(request, specialty_code=None):
         except:
             raise Http404()
         vacancies = Vacancy.objects.filter(specialty__code=specialty_code).all()
-        # get_skills_list(vacancies)
     else:
         specialty = None
         vacancies = Vacancy.objects.all()
-        # get_skills_list(vacancies)
 
     return render(request, 'vacancies.html', {
         'vacancies': vacancies,
@@ -41,7 +39,6 @@ def company_view(request, company_id):
     except:
         raise Http404()
     vacancies = Vacancy.objects.filter(company__id=company_id).all()
-    # get_skills_list(vacancies)
 
     return render(request, 'company.html', {
         'company': company,
@@ -54,7 +51,7 @@ def vacancy_view(request, job_id):
         vacancy = Vacancy.objects.get(id=job_id)
     except:
         raise Http404()
-    # vacancy.skills_list = vacancy.skills.split(', ')
+
     return render(request, 'vacancy.html', {
         'vacancy': vacancy,
     })
@@ -68,7 +65,3 @@ def custom_handler500(request):
     return HttpResponseServerError('<br/><h1>Ошибка 500</h1><h2>Ошибка запроса. Отказано в обработке</h2>')
 
 
-# def get_skills_list(vacancies):
-#     for vacancy in vacancies:
-#         vacancy.skills_list = vacancy.skills.split(', ')
-#     return vacancies
