@@ -1,5 +1,5 @@
 from django.db.models import Count
-from django.http import HttpResponseNotFound, HttpResponseServerError
+from django.http import HttpResponseNotFound, HttpResponseServerError, Http404
 from django.shortcuts import render
 
 from vacancies.models import Specialty, Company, Vacancy
@@ -7,11 +7,8 @@ from vacancies.models import Specialty, Company, Vacancy
 
 def main_view(request):
     specialties = Specialty.objects.annotate(num_vacancy=Count('vacancies')).all()
-    for specialty in specialties:
-        specialty.word = vacancy_declension(specialty.num_vacancy)
     companies = Company.objects.annotate(num_vacancy=Count('vacancies')).all()
-    for company in companies:
-        company.word = vacancy_declension(company.num_vacancy)
+
     return render(request, 'index.html', {
         'specialties': specialties,
         'companies': companies
@@ -20,71 +17,47 @@ def main_view(request):
 
 def jobs_views(request, specialty_code=None):
     if specialty_code:
+        try:
+            specialty = Specialty.objects.get(code=specialty_code)
+        except:
+            raise Http404
         vacancies = Vacancy.objects.filter(specialty__code=specialty_code).all()
-        for vacancy in vacancies:
-            vacancy.skills_list = vacancy.skills.split(', ')
-        specialty = Specialty.objects.filter(code=specialty_code).first()
-        count = vacancies.count()
-        word = vacancy_declension(count)
+        get_skills_list(vacancies)
     else:
-        vacancies = Vacancy.objects.all()
-        for vacancy in vacancies:
-            vacancy.skills_list = vacancy.skills.split(', ')
         specialty = None
-        count = vacancies.count()
-        word = vacancy_declension(count)
+        vacancies = Vacancy.objects.all()
+        get_skills_list(vacancies)
+
     return render(request, 'vacancies.html', {
         'vacancies': vacancies,
         'specialty_code': specialty_code,
         'specialty': specialty,
-        'count': count,
-        'word': word
     })
 
 
 def company_view(request, company_id):
-    company = Company.objects.get(id=company_id)
+    try:
+        company = Company.objects.get(id=company_id)
+    except:
+        raise Http404
     vacancies = Vacancy.objects.filter(company__id=company_id).all()
-    for vacancy in vacancies:
-        vacancy.skills_list = vacancy.skills.split(', ')
-    count = vacancies.count()
-    word = vacancy_declension(count)
+    get_skills_list(vacancies)
+
     return render(request, 'company.html', {
         'company': company,
         'vacancies': vacancies,
-        'count': count,
-        'word': word
     })
 
 
 def vacancy_view(request, job_id):
-    vacancy = Vacancy.objects.get(id=job_id)
+    try:
+        vacancy = Vacancy.objects.get(id=job_id)
+    except:
+        raise Http404
     vacancy.skills_list = vacancy.skills.split(', ')
-    word = people_declension(vacancy.company.employee_count)
     return render(request, 'vacancy.html', {
         'vacancy': vacancy,
-        'word': word
     })
-
-
-def vacancy_declension(num):
-    n = int(str(num)[-1])
-    m = int(str(num // 10)[-1])
-    if n == 1 and m != 1:
-        return 'вакансия'
-    elif 1 < n < 5 and m != 1:
-        return 'вакансии'
-    else:
-        return 'вакансий'
-
-
-def people_declension(num):
-    n = int(str(num)[-1])
-    m = int(str(num // 10)[-1])
-    if 1 < n < 5 and m != 1:
-        return 'человека'
-    else:
-        return 'человек'
 
 
 def custom_handler404(request, exception):
@@ -92,4 +65,10 @@ def custom_handler404(request, exception):
 
 
 def custom_handler500(request):
-    return HttpResponseServerError('<br/><h1>Ошибка 500</h1><h2>Запрос некорректен. Отказано в обработке</h2>')
+    return HttpResponseServerError('<br/><h1>Ошибка 500</h1><h2>Ошибка запроса. Отказано в обработке</h2>')
+
+
+def get_skills_list(vacancies):
+    for vacancy in vacancies:
+        vacancy.skills_list = vacancy.skills.split(', ')
+    return vacancies

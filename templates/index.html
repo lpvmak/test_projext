@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Поиск сотрудников{% endblock %}
 {% block container %}
+{% load declensions %}
 <main class="container mt-3">
   <section>
     <h1 class="h1 text-center mx-auto mt-4 py-5"><strong>Вакансии для <br>Junior-разработчиков</strong></h1>
@@ -38,7 +39,7 @@
           <div class="card-body">
             <p class="card-text mb-2">{{ specialty.title }}</p>
             <p class="card-text"><a href="{% url 'vacancies' specialty_code=specialty.code %}">
-              {{ specialty.num_vacancy }} {{ specialty.word }}</a></p>
+              {{ specialty.num_vacancy|vacancy_declension }}</a></p>
           </div>
         </div>
       </div>
@@ -54,7 +55,7 @@
           <a href="{% url 'company' company_id=company.id %}" style="max-width: 150px;" class="mx-auto d-block">
             <img class="mx-auto d-block mw-100" src="{% static company.logo %}" alt="{{ company.title}}">
             <div class="card-body">
-            <p class="card-text">{{ company.num_vacancy }} {{ company.word }}</p>
+            <p class="card-text">{{ company.num_vacancy|vacancy_declension }}</p>
             </div>
           </a>
         </div>

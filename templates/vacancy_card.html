@@ -6,7 +6,7 @@
       <div class="col-12 col-md-8 col-lg-9">
         <h2 class="h2 pb-2">{{ vacancy.title }}</h2>
         <p class="mb-2">{{ vacancy.specialty.title }} •
-          {% for item in vacancy.skills_list|join:' • ' %}{{ item }}{% endfor %}</p>
+          {% for skill in vacancy.skills_list|join:' • ' %}{{ skill }}{% endfor %}</p>
         <p>От {{ vacancy.salary_min }} до {{ vacancy.salary_max }} руб.</p>
         <p class="text-muted pt-1">{{ vacancy.posted }}</p>
       </div>
