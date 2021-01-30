@@ -3,7 +3,7 @@ from django import template
 register = template.Library()
 
 
-@register.filter()
+@register.filter
 def vacancy_declension(num):
     unit = int(str(num)[-1])
     tens = int(str(num // 10)[-1])
@@ -15,7 +15,7 @@ def vacancy_declension(num):
         return f'{num} вакансий'
 
 
-@register.filter()
+@register.filter
 def people_declension(num):
     unit = int(str(num)[-1])
     tens = int(str(num // 10)[-1])
@@ -23,3 +23,8 @@ def people_declension(num):
         return f'{num} человека'
     else:
         return f'{num} человек'
+
+
+@register.filter
+def convert_to_list(s):
+    return s.split(', ')

@@ -2,7 +2,7 @@
 {% block title %}Вакансия подробнее{% endblock %}
 {% block container %}
 {% load static %}
-{% load declensions %}
+{% load vacancies_filters %}
 <main class="container mt-3 pb-5">
   <div class="row mt-5">
     <div class="col-12 col-lg-2">
@@ -19,11 +19,9 @@
           <h1 class="h2 mt-4 font-weight-bold">{{ vacancy.title }}</h1>
           <p class="m-0 pl-3">{{ vacancy.salary_min }} – {{ vacancy.salary_max }} Р</p>
         </div>
-        <p class="mt-2">{{ vacancy.specialty.title }} •
-          {% for item in vacancy.skills_list|join:' • ' %}{{ item }}{% endfor %}
-        </p>
+        <p class="mt-2">{{ vacancy.specialty.title }} • {{ vacancy.skills|convert_to_list|join:' • ' }}</p>
         <p class="text-muted mb-4">
-          {{ vacancy.company.title }} ({{ vacancy.company.employee_count|people_declension }}),
+          <b>{{ vacancy.company.title }}</b>, ({{ vacancy.company.employee_count|people_declension }}),
           {{ vacancy.company.location }}
         </p>
         <div style="line-height: 1.8;">
