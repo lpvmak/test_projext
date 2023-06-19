@@ -15,7 +15,7 @@ def main_view(request):
     })
 
 
-def jobs_views(request, specialty_code=None):
+def jobs_views(request, specialty_code=None): # Предпочительнее использовать vacancies_view во избежание путаницы
     if specialty_code:
         try:
             specialty = Specialty.objects.get(code=specialty_code)

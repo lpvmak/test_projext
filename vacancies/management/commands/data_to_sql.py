@@ -9,6 +9,9 @@ from vacancies.models import Specialty, Company, Vacancy
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         for direction in specialties:
+            # Стоит добавить проверку if Specialty.objects.filter(code=code).exists(),
+            # чтобы при повторной загрузки объекты не дублировались
+            # И именование direction добавляет путаницы
             item = DotMap(direction)
             new_item = Specialty(
                 code=item.code,

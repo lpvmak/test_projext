@@ -1,5 +1,10 @@
 {% load static %}
-{% for vacancy in vacancies %}
+{% for vacancy in vacancies %} 
+<!-- 
+  Этот цикл мы можем перенести в "vacancies.html", при этом переменную vacancy можно прокинуть с помощью 
+  {% include 'vacancy_card.html' with vacancy = vacancy%}
+  Это позволит нам переиспользовать этот шаблон в будущем не только при выводе списка
+-->
 {% load vacancies_filters %}
 <div class="card mb-4">
   <div class="card-body px-4">

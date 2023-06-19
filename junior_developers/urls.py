@@ -18,13 +18,14 @@ from django.urls import path
 
 from vacancies.views import main_view, jobs_views, company_view, vacancy_view, custom_handler404, custom_handler500
 
+# Стоило использовать роутинг из задания
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', main_view, name='main'),
-    path('vacancies/<str:specialty_code>', jobs_views, name='vacancies'),
+    path('vacancies/<str:specialty_code>', jobs_views, name='vacancies'), # /vacancies/cat/<str:specialty_code>
     path('vacancies', jobs_views, name='vacancies_all'),
-    path('company/<int:company_id>', company_view, name='company'),
-    path('vacancy/<int:job_id>', vacancy_view, name='vacancy'),
+    path('company/<int:company_id>', company_view, name='company'), # /companies/<int:company_id>
+    path('vacancy/<int:job_id>', vacancy_view, name='vacancy'), # /vacancies/<int:job_id>
 ]
 
 handler404 = custom_handler404

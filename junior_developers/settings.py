@@ -23,6 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', '0123456789')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# В Security Warning написано все правильно, но можно оставить DEBUG=True на учебных проектах, это облегчит Вам отладку а нам проверку
+# Можно оставить в учебных проектах DEBUG=True - это облегчит отладку Вам и проверку Нам
 DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get('HOSTS', '127.0.0.1').split(',')
